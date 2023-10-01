@@ -1,0 +1,185 @@
+openapi: 3.0.3
+info:
+  title: API for Credit Applications
+  version: "1.0"
+servers:
+  - url: http://localhost:8900/api/v1/
+    description: local development server
+paths:
+  /creditApplications:
+    get:
+      summary: "Get list of all credit applications"
+      parameters:
+        - in: header
+          name: X-Request-With
+          schema:
+            type: string
+          required: true
+          example: XMLHttpRequest
+      tags:
+        - creditApplications
+      operationId: getAllCreditApplications
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditApplications'
+    post:
+      summary: "Store a new credit application"
+      parameters:
+        - in: header
+          name: X-Request-With
+          schema:
+            type: string
+          required: true
+          example: XMLHttpRequest
+      tags:
+        - creditApplications
+      operationId: storeCreditApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditApplication'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditApplication'
+
+  /creditApplications/{creditApplication}:
+    get:
+      summary: "Get credit application by id"
+      tags:
+        - creditApplications
+      operationId: getCreditApplicationById
+      parameters:
+        - name: creditApplication
+          in: path
+          required: true
+          description: credit application id
+          schema:
+            type: integer
+        - in: header
+          name: X-Request-With
+          schema:
+            type: string
+          required: true
+          example: XMLHttpRequest
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditApplication'
+
+    put:
+      summary: "Update credit application by id"
+      tags:
+        - creditApplications
+      operationId: updateCreditApplicationById
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditApplication'
+      parameters:
+        - name: creditApplication
+          in: path
+          required: true
+          description: credit application id
+          schema:
+            type: integer
+        - in: header
+          name: X-Request-With
+          schema:
+            type: string
+          required: true
+          example: XMLHttpRequest
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditApplication'
+
+    delete:
+      summary: "Destroy credit application by id"
+      tags:
+        - creditApplications
+      operationId: destroyCreditApplicationById
+      parameters:
+        - name: creditApplication
+          in: path
+          required: true
+          description: credit application id
+          schema:
+            type: integer
+        - in: header
+          name: X-Request-With
+          schema:
+            type: string
+          required: true
+          example: XMLHttpRequest
+      responses:
+        '204':
+          description: success
+
+
+
+
+
+components:
+  schemas:
+    CreditApplication:
+      type: object
+      required:
+        - dealer
+        - contact_person
+        - summ
+        - credit_term
+        - interest_rate
+        - reason
+        - status
+        - bank_id
+      properties:
+        dealer:
+          type: string
+        contact_person:
+          type: string
+        summ:
+          type: number
+        credit_term:
+          type: number
+          description: credit term in days
+        interest_rate:
+          type: number
+          description: interest rate in range (1-99.99)
+        reason:
+          type: string
+        status:
+          type: string
+          enum:
+            - new
+            - progress
+            - approved
+            - denied
+        bank_id:
+          type: number
+          description: id of bank that exists in 'banks' table
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    CreditApplications:
+        type: array
+        items:
+          $ref: '#/components/schemas/CreditApplication'
